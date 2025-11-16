@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.Decode.AutonomousPLUS;
 
 @Autonomous(group = "Basic", name = "Blue Auton") //TODO name your auto
-public class _auton_blue extends AutonomousPLUS {
+public class auton_blue extends AutonomousPLUS {
 
     public void runOpMode() { 
 
