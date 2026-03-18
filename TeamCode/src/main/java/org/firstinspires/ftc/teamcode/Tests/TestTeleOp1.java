@@ -52,7 +52,7 @@ public class TestTeleOp1 extends LinearOpMode {
             // ----------------------------
             // DRIVING
             // ----------------------------
-            double movement = -gamepad1.left_stick_y;
+            double movement = gamepad1.left_stick_y;
             double rotation = gamepad1.right_stick_x;
             double strafe = gamepad1.left_stick_x;
 
@@ -64,20 +64,16 @@ public class TestTeleOp1 extends LinearOpMode {
             // ----------------------------
             boolean rbPressed = gamepad1.right_bumper;
             if (rbPressed && !wasRBPressedLastLoop) {
-                int currentPOS = toucherXD.getCurrentEncoderPosition();
-                int targetPOS = currentPOS + toucherXD.getSpacingTicks();
-                toucherXD.diskMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-                toucherXD.diskMotor.setTargetPosition(targetPOS);
-                toucherXD.diskMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-                toucherXD.diskMotor.setPower(0.4);
+                // Call the moveNextStep() method of ToucherXD
+                toucherXD.movenextstep();
             }
             wasRBPressedLastLoop = rbPressed;
 
             // ----------------------------
             // INTAKE
             // ----------------------------
-            if (gamepad2.dpad_up) intake.intakeIn();
-            else if (gamepad2.dpad_down) intake.intakeOut();
+            if (gamepad1.dpad_up) intake.intakeIn();
+            else if (gamepad1.dpad_down) intake.intakeOut();
             else intake.stop();
 
             // ----------------------------

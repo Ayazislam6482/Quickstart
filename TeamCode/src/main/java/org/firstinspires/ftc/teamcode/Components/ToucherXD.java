@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class ToucherXD {
 
-    private final DcMotorEx diskMotor;
+    public final DcMotorEx diskMotor;
     private final DigitalChannel touch;
 
     private static final int SPACING_TICKS = 50; // distance between positions
-   // private static final int NUM_POSITIONS = 3;
+    //private static final int NUM_POSITIONS = 3;
 
     //private int currentState = 0;
     private boolean wasPressedLastLoop = false;
@@ -50,7 +50,7 @@ public class ToucherXD {
         wasPressedLastLoop = pressed;
     }
 
-    private void movenextstep() {
+    public void movenextstep() {
         int currentPOS = diskMotor.getCurrentPosition();
         int targetPOS = currentPOS + SPACING_TICKS;
         diskMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

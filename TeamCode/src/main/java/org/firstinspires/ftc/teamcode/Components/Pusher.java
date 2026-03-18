@@ -1,32 +1,3 @@
-//package org.firstinspires.ftc.teamcode.Components;
-//
-//import com.qualcomm.robotcore.hardware.HardwareMap;
-//import com.qualcomm.robotcore.hardware.Servo;
-//
-//public class Pusher {
-//
-//    public Servo pusher;
-//
-//    private final double PUSH_UP_POS = 0.9;    // adjust for your robot
-//    private final double PUSH_DOWN_POS = 0.3;   // adjust for your robot
-//
-//    public Pusher(HardwareMap hardwareMap) {
-//        pusher = hardwareMap.get(Servo.class, "pusher");
-//    }
-//
-//    public void initialize() {
-//        pusher.setPosition(PUSH_DOWN_POS);  // start down
-//    }
-//
-//    // Move to preset positions
-//    public void pushUp() {
-//        pusher.setPosition(PUSH_UP_POS);
-//    }
-//
-//    public void pushDown() {
-//        pusher.setPosition(PUSH_DOWN_POS);
-//    }
-//}
 package org.firstinspires.ftc.teamcode.Components;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -38,9 +9,8 @@ public class Pusher {
     public Servo pusher;
 
     // Position constants - adjust these for your robot
-    private final double PUSH_UP_POS = 0.9;      // R1 position
-    private final double PUSH_DOWN_POS = 0.3;    // L1 position
-    private final double PUSH_MIDDLE_POS = 0.6;  // Default/off position
+    private final double PUSH_UP_POS = 1.0;     // Fully up position (right bumper)
+    private final double PUSH_DOWN_POS = -2.0;   // Fully down position (left bumper)
 
     // Current position state
     private double currentPosition;
@@ -52,51 +22,39 @@ public class Pusher {
     // Track which position we're in
     private enum PusherState {
         UP,
-        DOWN,
-        MIDDLE
+        DOWN
     }
-    private PusherState currentState = PusherState.MIDDLE;
+
+    private PusherState currentState = PusherState.DOWN;
 
     public Pusher(HardwareMap hardwareMap) {
         pusher = hardwareMap.get(Servo.class, "pusher");
     }
 
     public void initialize() {
-        // Start at middle position
-        currentPosition = PUSH_MIDDLE_POS;
-        currentState = PusherState.MIDDLE;
+        // Start at middle position (can be a default state or middle of range)
+        currentPosition = -2.0;  // Midpoint value (change if desired)
+        currentState = PusherState.DOWN;
         pusher.setPosition(currentPosition);
     }
 
     /**
      * Update method to be called in OpMode loop
-     * R1 (right_bumper) toggles between UP and MIDDLE
-     * L1 (left_bumper) toggles between DOWN and MIDDLE
+     * R1 (right_bumper) moves the pusher all the way up
+     * L1 (left_bumper) moves the pusher all the way down
      */
     public void update(Gamepad gamepad) {
         boolean r1Pressed = gamepad.right_bumper;
         boolean l1Pressed = gamepad.left_bumper;
 
-        // R1 rising edge detection - toggle UP/MIDDLE
+        // R1 rising edge detection - move to UP position
         if (r1Pressed && !lastR1State) {
-            if (currentState == PusherState.UP) {
-                // Already up, move to middle
-                pushMiddle();
-            } else {
-                // Move to up position
-                pushUp();
-            }
+            pushUp(); // Move to UP position
         }
 
-        // L1 rising edge detection - toggle DOWN/MIDDLE
+        // L1 rising edge detection - move to DOWN position
         if (l1Pressed && !lastL1State) {
-            if (currentState == PusherState.DOWN) {
-                // Already down, move to middle
-                pushMiddle();
-            } else {
-                // Move to down position
-                pushDown();
-            }
+            pushDown(); // Move to DOWN position
         }
 
         // Update button states for next loop
@@ -104,22 +62,17 @@ public class Pusher {
         lastL1State = l1Pressed;
     }
 
-    // Move to preset positions
+    // Move to fully up position (right bumper)
     public void pushUp() {
         currentPosition = PUSH_UP_POS;
         currentState = PusherState.UP;
         pusher.setPosition(currentPosition);
     }
 
+    // Move to fully down position (left bumper)
     public void pushDown() {
         currentPosition = PUSH_DOWN_POS;
         currentState = PusherState.DOWN;
-        pusher.setPosition(currentPosition);
-    }
-
-    public void pushMiddle() {
-        currentPosition = PUSH_MIDDLE_POS;
-        currentState = PusherState.MIDDLE;
         pusher.setPosition(currentPosition);
     }
 
@@ -135,8 +88,6 @@ public class Pusher {
                 return "UP (R1)";
             case DOWN:
                 return "DOWN (L1)";
-            case MIDDLE:
-                return "MIDDLE";
             default:
                 return "UNKNOWN";
         }
